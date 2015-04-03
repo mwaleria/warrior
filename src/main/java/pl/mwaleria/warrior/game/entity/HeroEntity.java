@@ -6,6 +6,8 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import pl.mwaleria.warrior.game.CollisionDirection;
+import pl.mwaleria.warrior.game.Entity;
 import pl.mwaleria.warrior.game.EntityState;
 import pl.mwaleria.warrior.game.World;
 
@@ -13,10 +15,6 @@ import pl.mwaleria.warrior.game.World;
  * Created by Marcin on 2015-04-02.
  */
 public class HeroEntity extends UnitEntity implements Controlable {
-
-    private static Animation animation;
-
-
 
     private UnitSkill jumpSkill;
 
@@ -26,11 +24,11 @@ public class HeroEntity extends UnitEntity implements Controlable {
 
     private static ImmutableMap<EntityState,Animation> animations;
 
-    public HeroEntity(final World world, final float x,final float y, final float height,final float width) {
-        super(world,x, y, height, width);
+    public HeroEntity(final World world, final float x,final float y,final float width, final float height) {
+        super(world,x, y, width,  height);
         this.horizontalMoveSpeed = 0.5f;
         this.verticalMoveSpeed = 0.2f;
-        this.jumpSpeed = -3.67f;
+        this.jumpSpeed = -1.67f;
         this.jumpSkill = new JumpSkill(this,300);
     }
 
@@ -59,5 +57,31 @@ public class HeroEntity extends UnitEntity implements Controlable {
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
         this.doControl(gameContainer.getInput(),gameContainer.getTime());
         this.move();
+    }
+
+    @Override
+    public void collisionAction(Entity other, CollisionDirection direction) {
+        if(direction != CollisionDirection.NONE) {
+            System.out.println("Coll = " + direction);
+            switch(direction) {
+
+                case LEFT:
+                    this.dx = 0;
+                    this.setX(other.getXPlusWidth());
+                    break;
+                case RIGHT:
+                    this.dx = 0;
+                    this.setX(other.getX() - this.getWidth());
+                    break;
+                case DOWN:
+                    this.dy = 0;
+                    this.setY(other.getY() - this.getHeight());
+                    break;
+                case UP:
+                    this.dy = 0;
+                    this.setY(other.getYPlusHeight());
+                    break;
+            }
+        }
     }
 }

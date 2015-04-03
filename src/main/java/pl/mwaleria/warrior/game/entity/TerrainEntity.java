@@ -26,8 +26,8 @@ public class TerrainEntity extends Entity {
 
     private static ImmutableMap<Terrain,Image> images;
 
-    public TerrainEntity(World world, float x, float y, float height, float width) {
-        super(world, x, y, height, width);
+    public TerrainEntity(World world, float x, float y, float width, float height) {
+        super(world, x, y, width, height);
         if(height % TILES_64 != 0 || width% TILES_64 !=0) {
             throw new RuntimeException("invalid entity size, please use only 64s tiles");
         }

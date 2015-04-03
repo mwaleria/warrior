@@ -38,8 +38,8 @@ public abstract class MovableEntity extends Entity {
 
     protected float jumpSpeed;
 
-    public MovableEntity(final World world,final float x,final float y,final float height,final float width, final boolean gravitional) {
-        super(world,x, y, height, width);
+    public MovableEntity(final World world,final float x,final float y,final float width,final float height, final boolean gravitional) {
+        super(world,x, y,  width,height);
         this.gravitational = gravitional;
         lastMove = new Vector2f();
     }
