@@ -19,17 +19,17 @@ public abstract class UnitEntity extends MovableEntity implements Hurtable {
     }
 
 
-    @Override
+
     public int getHp() {
         return hp;
     }
 
-    @Override
+
     public void setHp(int hp) {
         this.hp = hp;
     }
 
-    @Override
+
     public void takeDamage(int damage) {
         this.hp = this.hp - damage;
         if(this.hp <= 0 ) {
@@ -37,12 +37,12 @@ public abstract class UnitEntity extends MovableEntity implements Hurtable {
         }
     }
 
-    @Override
+
     public boolean isAlive() {
         return alive;
     }
 
-    @Override
+
     public void setAlive(boolean alive) {
         this.alive = alive;
     }

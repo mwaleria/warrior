@@ -10,22 +10,16 @@ public enum CollisionDirection {
 
     public CollisionDirection getOpositeDirection() {
         switch(this) {
-
             case LEFT:
                 return RIGHT;
-
             case RIGHT:
                 return LEFT;
-
             case DOWN:
                 return UP;
-
             case UP:
                 return DOWN;
-
             case NONE:
                 return NONE;
-
         }
         return NONE;
     }

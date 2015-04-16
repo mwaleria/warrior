@@ -18,8 +18,6 @@ public abstract class Entity  {
 
     protected  EntityState entityState;
 
-    protected Line downLine;
-
     /**World in which the entity exists */
     protected final World world;
 
@@ -27,7 +25,6 @@ public abstract class Entity  {
         this.world =world;
         rectangle = new Rectangle(x,y,width,height);
         entityState = EntityState.MOVE_LEFT;
-        downLine = new Line(0,0,0,0);
     }
 
     public Rectangle getRectangle() {
@@ -74,29 +71,24 @@ public abstract class Entity  {
         return this.rectangle.getHeight();
     }
 
-    public Line getDownLine(){
-        this.downLine.set(rectangle.getX(),rectangle.getY() +rectangle.getHeight(),rectangle.getX() + rectangle.getWidth(),rectangle.getY() +rectangle.getHeight());
-        return downLine;
-    }
-
-    public CollisionDirection checkCollision(final Entity other) {
+    public void checkCollision(final Entity other) {
         if(this.intersects(other)) {
+            CollisionDirection collisionDirection = CollisionDirection.NONE;
             if(this.getYPlusHeight() > other.getY()) {
-                return CollisionDirection.DOWN;
+                collisionDirection =  CollisionDirection.DOWN;
+            } else if(this.getY() < other.getYPlusHeight()) {
+                collisionDirection =  CollisionDirection.UP;
+            } else if(this.getX() < other.getXPlusWidth()) {
+                collisionDirection =  CollisionDirection.LEFT;
+            } else if( this.getXPlusWidth() > other.getX()) {
+                collisionDirection =  CollisionDirection.RIGHT;
             }
-            if(this.getY() < other.getYPlusHeight()) {
-                return CollisionDirection.UP;
-            }
-            if(this.getX() < other.getXPlusWidth()) {
-                return CollisionDirection.LEFT;
-            }
-            if( this.getXPlusWidth() > other.getX()) {
-                return CollisionDirection.RIGHT;
+            System.out.println(System.currentTimeMillis()+"  + collision = " + collisionDirection +" this ="+ this.toString() + " other ="+ other.toString());
+            if(collisionDirection != CollisionDirection.NONE) {
+                this.collisionAction(other,collisionDirection);
+                other.collisionAction(this,collisionDirection.getOpositeDirection());
             }
         }
-
-
-        return CollisionDirection.NONE;
     }
 
     public float getXPlusWidth() {
@@ -109,5 +101,19 @@ public abstract class Entity  {
 
     public void collisionAction(final Entity other, final CollisionDirection direction) {
         //do nothing from default
+    }
+
+    public String toString() {
+        StringBuilder sb= new StringBuilder();
+        sb.append("[Entity x=");
+        sb.append(rectangle.getX());
+        sb.append(", y=");
+        sb.append(rectangle.getY());
+        sb.append(", width=");
+        sb.append(rectangle.getWidth());
+        sb.append(", height=");
+        sb.append(rectangle.getHeight());
+        sb.append("]");
+        return sb.toString();
     }
 }

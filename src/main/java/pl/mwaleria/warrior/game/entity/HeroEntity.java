@@ -37,7 +37,6 @@ public class HeroEntity extends UnitEntity implements Controlable {
         return animations.get(entityState);
     }
 
-    @Override
     public void doControl(Input input, long delta) {
 
         dx = 0;
@@ -57,14 +56,13 @@ public class HeroEntity extends UnitEntity implements Controlable {
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
         this.doControl(gameContainer.getInput(),gameContainer.getTime());
         this.move();
+
     }
 
     @Override
     public void collisionAction(Entity other, CollisionDirection direction) {
         if(direction != CollisionDirection.NONE) {
-            System.out.println("Coll = " + direction);
             switch(direction) {
-
                 case LEFT:
                     this.dx = 0;
                     this.setX(other.getXPlusWidth());
@@ -74,12 +72,13 @@ public class HeroEntity extends UnitEntity implements Controlable {
                     this.setX(other.getX() - this.getWidth());
                     break;
                 case DOWN:
+
                     this.dy = 0;
-                    this.setY(other.getY() - this.getHeight());
+                    this.setY(other.getY() - this.getHeight() - 0.001f);
                     break;
                 case UP:
                     this.dy = 0;
-                    this.setY(other.getYPlusHeight());
+                    this.setY(other.getYPlusHeight() + 0.001f);
                     break;
             }
         }

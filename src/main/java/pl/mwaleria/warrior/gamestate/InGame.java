@@ -1,5 +1,6 @@
 package pl.mwaleria.warrior.gamestate;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -26,7 +27,7 @@ public class InGame extends BasicGameState {
     private TerrainEntity terrainEntity ;
     private TerrainEntity terrainEntity2 ;
 
-    @Override
+
     public void init(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         AnimationUtils.loadAllAnimation();
         //testEntity  = new Hero(10,10,50,50);
@@ -36,39 +37,33 @@ public class InGame extends BasicGameState {
         terrainEntity2 = new TerrainEntity(null,0,500,1024,64);
     }
 
-    @Override
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics) throws SlickException {
-
+        graphics.setColor(Color.white);
         terrainEntity.render(gameContainer,stateBasedGame,graphics);
         terrainEntity2.render(gameContainer,stateBasedGame,graphics);
         testEntity.render(gameContainer,stateBasedGame,graphics);
-        graphics.drawString("mouse x = " + gameContainer.getInput().getMouseX() + "mouse y = " + gameContainer.getInput().getMouseY(), 500, 450);
-        graphics.drawString("hero x = " + testEntity.getRectangle().getX() + " y = "+ testEntity.getRectangle().getY(), 500,500 );
-        graphics.drawString("line = "+ lineToString(testEntity.getDownLine()), 50,540 );
-        graphics.drawString("down col = "+ testEntity.isDownCollision(), 500,580 );
+        graphics.drawString("mouse x = " + gameContainer.getInput().getMouseX() + "mouse y = " + gameContainer.getInput().getMouseY(), 500, 50);
+        graphics.drawString("hero x = " + testEntity.getRectangle().getX() + " y = "+ testEntity.getRectangle().getY(), 500,100 );
+        graphics.drawString("down col = "+ testEntity.isDownCollision(), 500,180 );
     }
 
-    @Override
+
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
 
 
-        if(testEntity.isGravitational()) {
+        if(testEntity.isGravitational() && Float.compare(testEntity.getDy(),0.0f) != 0) {
             testEntity.setDy(testEntity.getDy() + 0.01f);
         }
 
         testEntity.update(gameContainer,stateBasedGame,i);
 
-        testEntity.collisionAction(terrainEntity,testEntity.checkCollision(terrainEntity));
-        testEntity.collisionAction(terrainEntity2,testEntity.checkCollision(terrainEntity2));
+        testEntity.checkCollision(terrainEntity);
+        testEntity.checkCollision(terrainEntity2);
 
     }
 
     @Override
     public int getID() {
         return gameState.getId();
-    }
-
-    private String lineToString(Line line) {
-        return "Line [x1="+line.getX1() + " y1="+line.getY1() + " x2="+line.getX2()+" y2="+line.getY2();
     }
 }

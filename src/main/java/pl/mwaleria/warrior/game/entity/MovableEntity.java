@@ -36,6 +36,9 @@ public abstract class MovableEntity extends Entity {
     /**Vertical speed of entity */
     protected float verticalMoveSpeed;
 
+    /**Flag which tell us if entity is stand on ground */
+    protected boolean standing;
+
     protected float jumpSpeed;
 
     public MovableEntity(final World world,final float x,final float y,final float width,final float height, final boolean gravitional) {
@@ -86,5 +89,13 @@ public abstract class MovableEntity extends Entity {
 
     public void setJumpSpeed(float jumpSpeed) {
         this.jumpSpeed = jumpSpeed;
+    }
+
+    public boolean isStanding() {
+        return standing;
+    }
+
+    public void setStanding(boolean standing) {
+        this.standing = standing;
     }
 }
