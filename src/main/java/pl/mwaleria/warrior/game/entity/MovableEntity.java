@@ -1,8 +1,11 @@
 package pl.mwaleria.warrior.game.entity;
 
-import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.state.StateBasedGame;
 import pl.mwaleria.warrior.game.Entity;
+import pl.mwaleria.warrior.game.Gravity;
 import pl.mwaleria.warrior.game.World;
 
 /**
@@ -27,31 +30,27 @@ public abstract class MovableEntity extends Entity {
     /** Vector which hold last move for undo action */
     private Vector2f lastMove;
 
-    /**Is gravity action on this entity*/
-    protected boolean gravitational;
-
     /**Horizontal speed of entity */
     protected float horizontalMoveSpeed;
 
     /**Vertical speed of entity */
     protected float verticalMoveSpeed;
 
-    /**Flag which tell us if entity is stand on ground */
-    protected boolean standing;
+
 
     protected float jumpSpeed;
 
-    public MovableEntity(final World world,final float x,final float y,final float width,final float height, final boolean gravitional) {
+    private MoveStrategy moveStrategy;
+
+    public MovableEntity(final World world, final float x, final float y, final float width, final float height) {
         super(world,x, y,  width,height);
-        this.gravitational = gravitional;
-        lastMove = new Vector2f();
+        moveStrategy = new LandUnitMoveStrategy(this, new Gravity(0.01f));
+
     }
 
 
     public void move() {
-        lastMove.set(dx,dy);
-        this.rectangle.setX(this.rectangle.getX() + this.dx);
-        this.rectangle.setY(this.rectangle.getY() + this.dy);
+        moveStrategy.move();
     }
 
     public float getDx() {
@@ -70,18 +69,6 @@ public abstract class MovableEntity extends Entity {
         this.dy = dy;
     }
 
-    public void undoMove() {
-        this.rectangle.setX(this.rectangle.getX() - lastMove.getX());
-        this.rectangle.setY(this.rectangle.getY() - lastMove.getY());
-    }
-
-    public boolean isGravitational() {
-        return gravitational;
-    }
-
-    public void setGravitational(final boolean gravitational) {
-        this.gravitational = gravitational;
-    }
 
     public float getJumpSpeed() {
         return jumpSpeed;
@@ -97,5 +84,11 @@ public abstract class MovableEntity extends Entity {
 
     public void setStanding(boolean standing) {
         this.standing = standing;
+    }
+
+    @Override
+    public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
+        this.standing = false;
+        super.update(gameContainer, stateBasedGame, i);
     }
 }

@@ -11,11 +11,8 @@ public abstract class UnitEntity extends MovableEntity implements Hurtable {
     protected int hp;
     protected boolean alive;
 
-    protected boolean downCollision;
-
     public UnitEntity(World world,float x, float y, float width, float height) {
-        super(world,x, y, width, height, true);
-        downCollision = false;
+        super(world, x, y, width, height);
     }
 
 
@@ -47,11 +44,4 @@ public abstract class UnitEntity extends MovableEntity implements Hurtable {
         this.alive = alive;
     }
 
-    public boolean isDownCollision() {
-        return downCollision;
-    }
-
-    public void setDownCollision(boolean downCollision) {
-        this.downCollision = downCollision;
-    }
 }

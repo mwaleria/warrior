@@ -4,7 +4,6 @@ import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -20,6 +19,11 @@ public abstract class Entity  {
 
     /**World in which the entity exists */
     protected final World world;
+
+    /**
+     * Flag which tell us if entity is stand on ground
+     */
+    protected boolean standing;
 
     public Entity(final World world,final float x,final float y,final float width,final float height) {
         this.world =world;
@@ -71,24 +75,24 @@ public abstract class Entity  {
         return this.rectangle.getHeight();
     }
 
-    public void checkCollision(final Entity other) {
-        if(this.intersects(other)) {
+    public CollisionDirection checkCollision(final Entity other) {
+
             CollisionDirection collisionDirection = CollisionDirection.NONE;
-            if(this.getYPlusHeight() > other.getY()) {
-                collisionDirection =  CollisionDirection.DOWN;
-            } else if(this.getY() < other.getYPlusHeight()) {
-                collisionDirection =  CollisionDirection.UP;
-            } else if(this.getX() < other.getXPlusWidth()) {
-                collisionDirection =  CollisionDirection.LEFT;
-            } else if( this.getXPlusWidth() > other.getX()) {
-                collisionDirection =  CollisionDirection.RIGHT;
-            }
-            System.out.println(System.currentTimeMillis()+"  + collision = " + collisionDirection +" this ="+ this.toString() + " other ="+ other.toString());
-            if(collisionDirection != CollisionDirection.NONE) {
-                this.collisionAction(other,collisionDirection);
-                other.collisionAction(this,collisionDirection.getOpositeDirection());
-            }
+
+        if (this.hasCommonPoints(this.getX(), this.getWidth(), other.getX(), other.getWidth()) &&
+                this.isBetween(this.getY(), other.getY(), other.getYPlusHeight())) {
+            collisionDirection = CollisionDirection.UP;
+        } else if (this.hasCommonPoints(this.getX(), this.getWidth(), other.getX(), other.getWidth()) &&
+                this.isBetween(this.getYPlusHeight(), other.getY(), other.getYPlusHeight())) {
+            collisionDirection = CollisionDirection.DOWN;
+        } else if (this.hasCommonPoints(this.getY(), this.getHeight(), other.getY(), other.getHeight()) &&
+                this.isBetween(this.getXPlusWidth(), other.getX(), other.getXPlusWidth())) {
+            collisionDirection = CollisionDirection.RIGHT;
+        } else if (this.hasCommonPoints(this.getY(), this.getHeight(), other.getY(), other.getHeight()) &&
+                this.isBetween(this.getX(), other.getX(), other.getXPlusWidth())) {
+            collisionDirection = CollisionDirection.LEFT;
         }
+        return collisionDirection;
     }
 
     public float getXPlusWidth() {
@@ -115,5 +119,14 @@ public abstract class Entity  {
         sb.append(rectangle.getHeight());
         sb.append("]");
         return sb.toString();
+    }
+
+    protected boolean hasCommonPoints(final float x1, final float h1, final float x2, final float h2) {
+        return (x1 >= x2 && x1 <= x2 + h2) || (x1 + h1 >= x2 && x1 + h1 <= x2 + h2) ||
+                (x2 >= x1 && x2 <= x1 + h1) || (x2 + h2 >= x1 && x2 + h2 <= x1 + h1);
+    }
+
+    protected boolean isBetween(final float a, final float b, final float c) {
+        return a >= b && a <= c;
     }
 }

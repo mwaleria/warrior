@@ -38,8 +38,7 @@ public class HeroEntity extends UnitEntity implements Controlable {
     }
 
     public void doControl(Input input, long delta) {
-
-        dx = 0;
+        this.dx = 0;
         if(input.isKeyDown(Input.KEY_LEFT)) {
             this.entityState = EntityState.MOVE_LEFT;
             this.dx = -this.horizontalMoveSpeed;
@@ -47,20 +46,24 @@ public class HeroEntity extends UnitEntity implements Controlable {
             this.entityState = EntityState.MOVE_RIGHT;
             this.dx = this.horizontalMoveSpeed;
         }
-        if(input.isKeyDown(Input.KEY_SPACE)) {
+        if (input.isKeyDown(Input.KEY_SPACE) && standing) {
             jumpSkill.execute(delta);
         }
     }
 
     @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
-        this.doControl(gameContainer.getInput(),gameContainer.getTime());
+
+        this.doControl(gameContainer.getInput(), gameContainer.getTime());
         this.move();
+
 
     }
 
     @Override
     public void collisionAction(Entity other, CollisionDirection direction) {
+        System.out.println("collision action with direction = " + direction);
+        this.standing = false;
         if(direction != CollisionDirection.NONE) {
             switch(direction) {
                 case LEFT:
@@ -72,7 +75,8 @@ public class HeroEntity extends UnitEntity implements Controlable {
                     this.setX(other.getX() - this.getWidth());
                     break;
                 case DOWN:
-
+                    System.out.println("set standing = true");
+                    standing = true;
                     this.dy = 0;
                     this.setY(other.getY() - this.getHeight() - 0.001f);
                     break;
@@ -82,5 +86,7 @@ public class HeroEntity extends UnitEntity implements Controlable {
                     break;
             }
         }
+
+
     }
 }

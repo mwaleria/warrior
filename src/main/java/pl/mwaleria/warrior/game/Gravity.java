@@ -5,7 +5,7 @@ package pl.mwaleria.warrior.game;
  */
 public class Gravity {
 
-    private float gravityAccelerate;
+    private final float gravityAccelerate;
 
     public Gravity( final float gravityAccelerate) {
         this.gravityAccelerate = gravityAccelerate;
